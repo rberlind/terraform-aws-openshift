@@ -1,5 +1,24 @@
+// Vault provider
+// Set VAULT_ADDR and VAULT_TOKEN environment variables
+provider "vault" {}
+
+// AWS credentials from Vault
+data "vault_aws_access_credentials" "aws_creds" {
+  backend = "aws"
+  role = "deploy"
+}
+
+// Vault Kubernetes Auth Backend
+resource "vault_auth_backend" "k8s" {
+  type = "kubernetes"
+  path = "${var.vault_k8s_auth_path}"
+  description = "Vault Auth Backend for OpenShift"
+}
+
 //  Setup the core provider information.
 provider "aws" {
+  access_key = "${data.vault_aws_access_credentials.aws_creds.access_key}"
+  secret_key = "${data.vault_aws_access_credentials.aws_creds.secret_key}"
   region  = "${var.region}"
 }
 

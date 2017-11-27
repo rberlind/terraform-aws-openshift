@@ -28,3 +28,8 @@ variable "subnetaz" {
     ap-southeast-1 = "ap-southeast-1a"
   }
 }
+
+variable "vault_k8s_auth_path" {
+  description = "The path of the Vault k8s auth backend"
+  default = "openshift"
+}

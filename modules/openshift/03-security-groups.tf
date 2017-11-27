@@ -72,6 +72,7 @@ resource "aws_security_group" "openshift-public-ingress" {
 
 //  This security group allows public egress from the instances for HTTP and
 //  HTTPS, which is needed for yum updates, git access etc etc.
+// Also for Vault on port 8200
 resource "aws_security_group" "openshift-public-egress" {
   name        = "openshift-public-egress"
   description = "Security group that allows egress to the internet for instances over HTTP and HTTPS."
@@ -89,6 +90,14 @@ resource "aws_security_group" "openshift-public-egress" {
   egress {
     from_port   = 443
     to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  //  Vault
+  egress {
+    from_port   = 8200
+    to_port     = 8200
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
